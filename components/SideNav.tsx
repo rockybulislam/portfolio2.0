@@ -1,10 +1,22 @@
 "use client";
-import React, { useEffect, useRef, useState } from "react";
-import { motion, useMotionValue, useSpring, useTransform } from "framer-motion";
-import { Home, Terminal, Settings, User, Folder } from "lucide-react";
-import { cn } from "@/lib/utils";
+import { useEffect, useRef, useState } from "react";
+import {
+  motion,
+  useMotionValue,
+  useSpring,
+  useTransform,
+  type MotionValue,
+} from "framer-motion";
+import {
+  Home,
+  Terminal,
+  Settings,
+  User,
+  Folder,
+  type LucideIcon,
+} from "lucide-react";
 
-const icons = [
+const icons: Array<{ icon: LucideIcon; label: string }> = [
   { icon: Home, label: "Home" },
   { icon: Terminal, label: "Projects" },
   { icon: Folder, label: "Files" },
@@ -13,7 +25,7 @@ const icons = [
 ];
 
 export default function VerticalDock() {
-  const mouseX = useMotionValue(Infinity);
+  const mouseX = useMotionValue<number>(Infinity);
   const [isMobile, setIsMobile] = useState(false);
 
   useEffect(() => {
@@ -34,7 +46,7 @@ export default function VerticalDock() {
   const sizeRange = isMobile ? [32, 52, 32] : [40, 65, 40];
 
   return (
-    <div className="fixed left-1/2 bottom-4 z-50 -translate-x-1/2 md:left-4 md:top-1/2 md:bottom-auto md:-translate-x-0 md:-translate-y-1/2">
+    <div className="fixed left-1/2 bottom-4 z-50 -translate-x-1/2 md:left-4 md:top-1/2 md:bottom-auto md:translate-x-0 md:-translate-y-1/2">
       <motion.div
         onMouseMove={(e) => mouseX.set(e.pageY)}
         onMouseLeave={() => mouseX.set(Infinity)}
@@ -60,20 +72,18 @@ function IconItem({
   sizeRange,
   distanceRange,
 }: {
-  mouseX: any;
-  Icon: any;
+  mouseX: MotionValue<number>;
+  Icon: LucideIcon;
   sizeRange: number[];
   distanceRange: number[];
 }) {
   const ref = useRef<HTMLDivElement>(null);
 
-  // Calculate distance from mouse to icon center
-  const distance = useTransform(mouseX, (val) => {
+  const distance = useTransform(mouseX, (val: number) => {
     const bounds = ref.current?.getBoundingClientRect() ?? { y: 0, height: 0 };
     return val - bounds.y - bounds.height / 2;
   });
 
-  // Map distance to size (closer = larger)
   const widthSync = useTransform(distance, distanceRange, sizeRange);
   const width = useSpring(widthSync, {
     mass: 0.1,
