@@ -3,7 +3,6 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import Navbar from "@/components/Navbar";
 import { ThemeProvider } from "@/components/ui/theme-provider";
-import { Hero } from "@/components/Hero";
 import VerticalDock from "@/components/SideNav";
 
 const geistSans = Geist({
@@ -41,7 +40,6 @@ export default function RootLayout({
         >
           <Navbar />
           <VerticalDock />
-          <Hero />
           {children}
         </ThemeProvider>
       </body>

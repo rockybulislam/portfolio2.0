@@ -1,6 +1,8 @@
-import { Dice1, Divide } from "lucide-react";
-import Image from "next/image";
-
+import { Hero } from "@/components/Hero";
 export default function Home() {
-  return <div></div>;
+  return (
+    <div>
+      <Hero></Hero>
+    </div>
+  );
 }
