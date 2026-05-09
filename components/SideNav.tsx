@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, TouchEvent, MouseEvent } from "react";
 import {
   motion,
   useMotionValue,
@@ -25,7 +25,7 @@ const icons: Array<{ icon: LucideIcon; label: string }> = [
 ];
 
 export default function VerticalDock() {
-  const mouseX = useMotionValue<number>(Infinity);
+  const mousePos = useMotionValue<number>(Infinity);
   const [isMobile, setIsMobile] = useState(false);
 
   useEffect(() => {
@@ -43,22 +43,35 @@ export default function VerticalDock() {
   }, []);
 
   const distanceRange = isMobile ? [-80, 0, 80] : [-100, 0, 100];
-  const sizeRange = isMobile ? [32, 52, 32] : [40, 65, 40];
+  const sizeRange = isMobile ? [44, 64, 44] : [40, 65, 40];
+
+  const handleMouseMove = (e: MouseEvent) => {
+    mousePos.set(isMobile ? e.clientX : e.clientY);
+  };
+
+  const handleTouchMove = (e: TouchEvent) => {
+    mousePos.set(isMobile ? e.touches[0].clientX : e.touches[0].clientY);
+  };
+
+  const handleLeave = () => mousePos.set(Infinity);
 
   return (
     <div className="fixed left-1/2 bottom-4 z-50 -translate-x-1/2 md:left-4 md:top-1/2 md:bottom-auto md:translate-x-0 md:-translate-y-1/2">
       <motion.div
-        onMouseMove={(e) => mouseX.set(e.pageY)}
-        onMouseLeave={() => mouseX.set(Infinity)}
+        onMouseMove={handleMouseMove}
+        onMouseLeave={handleLeave}
+        onTouchMove={handleTouchMove}
+        onTouchEnd={handleLeave}
         className="inline-flex flex-row gap-2 rounded-xl bg-zinc-900/90 border border-zinc-800 p-2 shadow-xl backdrop-blur-md md:flex-col md:gap-4 md:rounded-2xl md:p-3"
       >
         {icons.map((item, i) => (
           <IconItem
             key={i}
-            mouseX={mouseX}
+            mousePos={mousePos}
             Icon={item.icon}
             sizeRange={sizeRange}
             distanceRange={distanceRange}
+            isMobile={isMobile}
           />
         ))}
       </motion.div>
@@ -67,21 +80,31 @@ export default function VerticalDock() {
 }
 
 function IconItem({
-  mouseX,
+  mousePos,
   Icon,
   sizeRange,
   distanceRange,
+  isMobile,
 }: {
-  mouseX: MotionValue<number>;
+  mousePos: MotionValue<number>;
   Icon: LucideIcon;
   sizeRange: number[];
   distanceRange: number[];
+  isMobile: boolean;
 }) {
   const ref = useRef<HTMLDivElement>(null);
 
-  const distance = useTransform(mouseX, (val: number) => {
-    const bounds = ref.current?.getBoundingClientRect() ?? { y: 0, height: 0 };
-    return val - bounds.y - bounds.height / 2;
+  const distance = useTransform(mousePos, (val: number) => {
+    const bounds = ref.current?.getBoundingClientRect() ?? {
+      x: 0,
+      y: 0,
+      width: 0,
+      height: 0,
+    };
+    return (
+      val -
+      (isMobile ? bounds.x + bounds.width / 2 : bounds.y + bounds.height / 2)
+    );
   });
 
   const widthSync = useTransform(distance, distanceRange, sizeRange);
@@ -95,9 +118,9 @@ function IconItem({
     <motion.div
       ref={ref}
       style={{ width, height: width }}
-      className="flex aspect-square items-center justify-center rounded-xl bg-zinc-800 text-zinc-400 hover:bg-zinc-700 hover:text-white transition-colors"
+      className="flex aspect-square items-center justify-center rounded-xl bg-zinc-800 text-zinc-400 hover:bg-zinc-700 hover:text-white active:bg-zinc-700 transition-colors"
     >
-      <Icon className="w-1/2 h-1/2" />
+      <Icon className="w-1/2 h-1/2 pointer-events-none" />
     </motion.div>
   );
 }
