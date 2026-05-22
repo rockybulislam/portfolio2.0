@@ -70,7 +70,7 @@ export default function VerticalDock() {
       const viewportHeight = window.innerHeight;
       const atBottom = currentY + viewportHeight >= docHeight - 8;
 
-      if (atBottom) {
+      if (lastScrollY.current - currentY <= -20) {
         setShowDock(false);
       } else if (lastScrollY.current - currentY >= 20) {
         setShowDock(true);
