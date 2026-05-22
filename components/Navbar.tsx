@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import {
   Moon,
   Sun,
@@ -55,12 +56,17 @@ export const ThemeToggle = () => {
   );
 };
 export default function Navbar() {
+  const pathname = usePathname();
+
   const navItems = [
     { name: "Home", href: "/", icon: Home },
     { name: "Projects", href: "/products", icon: Boxes },
     { name: "Contact", href: "/dashboard", icon: Phone },
     { name: "Settings", href: "/settings", icon: Settings },
   ];
+
+  const isActive = (href: string) =>
+    href === "/" ? pathname === "/" : pathname.startsWith(href);
 
   // ==============   Theme Switcher Component (Reuse for Web & Mobile) ==============
 
@@ -86,7 +92,12 @@ export default function Navbar() {
             <Link
               key={item.name}
               href={item.href}
-              className="transition-colors hover:text-primary text-muted-foreground"
+              aria-current={isActive(item.href) ? "page" : undefined}
+              className={`relative px-1 py-1.5 transition-colors hover:text-primary ${
+                isActive(item.href)
+                  ? "text-primary after:absolute after:left-0 after:-bottom-0.5 after:h-0.5 after:w-full after:rounded-full after:bg-primary"
+                  : "text-muted-foreground"
+              }`}
             >
               {item.name}
             </Link>
@@ -127,7 +138,12 @@ export default function Navbar() {
                     <Link
                       key={item.name}
                       href={item.href}
-                      className="flex items-center gap-3 px-3 py-2 rounded-md text-base font-medium hover:bg-primary/10 hover:text-primary transition-all"
+                      aria-current={isActive(item.href) ? "page" : undefined}
+                      className={`flex items-center gap-3 rounded-md px-3 py-2 text-base font-medium transition-all ${
+                        isActive(item.href)
+                          ? "bg-primary/10 text-primary"
+                          : "hover:bg-primary/10 hover:text-primary"
+                      }`}
                     >
                       <item.icon className="h-5 w-5" />
                       {item.name}

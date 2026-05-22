@@ -52,6 +52,20 @@ export default function VerticalDock() {
   const [isMobile, setIsMobile] = useState(false);
   const [showDock, setShowDock] = useState(true);
   const lastScrollY = useRef(0);
+  const dockVariants = {
+    hidden: {
+      opacity: 0,
+      y: isMobile ? 18 : 0,
+      x: isMobile ? 0 : -18,
+      scale: 0.96,
+    },
+    show: {
+      opacity: 1,
+      y: 0,
+      x: 0,
+      scale: 1,
+    },
+  };
 
   useEffect(() => {
     const media = window.matchMedia("(max-width: 768px)");
@@ -70,7 +84,7 @@ export default function VerticalDock() {
 
       if (deltaY > 15) {
         setShowDock(false);
-      } else if (deltaY < -15) {
+      } else if (deltaY < -10) {
         setShowDock(true);
       }
 
@@ -99,11 +113,13 @@ export default function VerticalDock() {
   const handleLeave = () => mousePos.set(Infinity);
 
   return (
-    <div
-      className={`fixed left-1/2 bottom-4 z-50 -translate-x-1/2 transition-all duration-300 md:left-4 md:top-1/2 md:bottom-auto md:translate-x-0 md:-translate-y-1/2 ${
-        shouldShowDock
-          ? "opacity-100 translate-y-0 pointer-events-auto"
-          : "opacity-0 translate-y-4 pointer-events-none"
+    <motion.div
+      initial="hidden"
+      animate={shouldShowDock ? "show" : "hidden"}
+      variants={dockVariants}
+      transition={{ type: "spring", stiffness: 260, damping: 24, mass: 0.8 }}
+      className={`fixed left-1/2 bottom-4 z-50 -translate-x-1/2 md:left-4 md:top-1/2 md:bottom-auto md:translate-x-0 md:-translate-y-1/2 ${
+        shouldShowDock ? "pointer-events-auto" : "pointer-events-none"
       }`}
     >
       <motion.div
@@ -124,7 +140,7 @@ export default function VerticalDock() {
           />
         ))}
       </motion.div>
-    </div>
+    </motion.div>
   );
 }
 
