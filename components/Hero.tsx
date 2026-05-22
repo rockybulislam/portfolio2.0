@@ -77,8 +77,8 @@ export function Hero() {
           className="md:col-span-7 order-1 md:order-2 flex flex-col gap-6"
         >
           <h1 className="text-2xl md:text-4xl font-extrabold tracking-tight leading-tight">
-            AN ORGANISM THAT TRUNSMUTES <br></br>
-            <span className="text-primary"> TRUNSMUTES COFFEE</span>
+            AN ORGANISM THAT <br></br>
+            TRUNSMUTES<span className="text-primary"> COFFEE</span>
             <br></br> INTO CODE..
           </h1>
           <motion.div
