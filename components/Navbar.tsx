@@ -62,15 +62,15 @@ export default function Navbar() {
     { name: "Settings", href: "/settings", icon: Settings },
   ];
 
-  // Theme Switcher Component (Reuse for Web & Mobile)
+  // ==============   Theme Switcher Component (Reuse for Web & Mobile) ==============
 
   return (
-    <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-backdrop-filter:bg-background/40">
+    <header className="sticky top-0 z-50 w-full border-b border-border/10 bg-background/95 shadow-sm shadow-black/5 dark:shadow-white/5 backdrop-blur supports-backdrop-filter:bg-background/40">
       <div
         className="
         mx-auto grid h-16 w-full max-w-7xl grid-cols-[1fr_1fr] md:grid-cols-[1fr_auto_1fr] items-center px-4"
       >
-        {/* --- LEFT SECTION: LOGO --- */}
+        {/* ========= LEFT SECTION: LOGO ============ */}
         <Link
           href="/"
           className="flex items-center gap-2 transition-opacity hover:opacity-80"
@@ -80,7 +80,7 @@ export default function Navbar() {
           </span>
         </Link>
 
-        {/* --- CENTER SECTION: WEB MENU --- */}
+        {/* ========= CENTER SECTION: WEB MENU ============ */}
         <nav className="hidden md:flex items-center gap-6 text-sm font-medium">
           {navItems.map((item) => (
             <Link
@@ -93,12 +93,12 @@ export default function Navbar() {
           ))}
         </nav>
 
-        {/* --- RIGHT SECTION: WEB THEME TOGGLE --- */}
+        {/* ========= RIGHT SECTION: WEB THEME TOGGLE ============ */}
         <div className="hidden md:block ml-auto pr-4">
           <ThemeToggle />
         </div>
 
-        {/* --- MOBILE SECTION: HUMBURGER --- */}
+        {/* ========= MOBILE SECTION: HUMBURGER ============ */}
         <div className="md:hidden justify-self-end">
           <Sheet>
             <SheetTrigger asChild>
@@ -115,13 +115,13 @@ export default function Navbar() {
               </SheetHeader>
 
               <div className="flex flex-col gap-4 py-6">
-                {/* Theme Toggle (Mobile view তে বামে থাকবে) */}
+                {/* ========= Theme Toggle (Mobile view তে বামে থাকবে) ============ */}
                 <div className="flex items-center justify-between px-2 py-2 bg-accent/20 rounded-lg">
                   <span className="text-sm font-medium">Switch Theme</span>
                   <ThemeToggle />
                 </div>
 
-                {/* Nav Links */}
+                {/* ========= Nav Links ============ */}
                 <nav className="flex flex-col gap-2">
                   {navItems.map((item) => (
                     <Link

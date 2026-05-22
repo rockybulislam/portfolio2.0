@@ -50,6 +50,8 @@ const icons: Array<{
 export default function VerticalDock() {
   const mousePos = useMotionValue<number>(Infinity);
   const [isMobile, setIsMobile] = useState(false);
+  const [showDock, setShowDock] = useState(true);
+  const lastScrollY = useRef(0);
 
   useEffect(() => {
     const media = window.matchMedia("(max-width: 768px)");
@@ -59,6 +61,31 @@ export default function VerticalDock() {
     media.addEventListener("change", handler);
     return () => media.removeEventListener("change", handler);
   }, []);
+  useEffect(() => {
+    if (!isMobile) return;
+
+    const handleScroll = () => {
+      const currentY = window.scrollY;
+      const docHeight = document.documentElement.scrollHeight;
+      const viewportHeight = window.innerHeight;
+      const atBottom = currentY + viewportHeight >= docHeight - 8;
+
+      if (atBottom) {
+        setShowDock(false);
+      } else if (lastScrollY.current - currentY >= 20) {
+        setShowDock(true);
+      }
+
+      lastScrollY.current = currentY;
+    };
+
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    handleScroll();
+
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, [isMobile]);
+
+  const shouldShowDock = !isMobile || showDock;
 
   const distanceRange = isMobile ? [-80, 0, 80] : [-100, 0, 100];
   const sizeRange = isMobile ? [44, 64, 44] : [40, 65, 40];
@@ -74,13 +101,19 @@ export default function VerticalDock() {
   const handleLeave = () => mousePos.set(Infinity);
 
   return (
-    <div className="fixed left-1/2 bottom-4 z-50 -translate-x-1/2 md:left-4 md:top-1/2 md:bottom-auto md:translate-x-0 md:-translate-y-1/2">
+    <div
+      className={`fixed left-1/2 bottom-4 z-50 -translate-x-1/2 transition-all duration-300 md:left-4 md:top-1/2 md:bottom-auto md:translate-x-0 md:-translate-y-1/2 ${
+        shouldShowDock
+          ? "opacity-100 translate-y-0 pointer-events-auto"
+          : "opacity-0 translate-y-4 pointer-events-none"
+      }`}
+    >
       <motion.div
         onMouseMove={handleMouseMove}
         onMouseLeave={handleLeave}
         onTouchMove={handleTouchMove}
         onTouchEnd={handleLeave}
-        className="inline-flex flex-row gap-2 rounded-xl bg-zinc-900/90 border border-zinc-800 p-2 shadow-xl backdrop-blur-md md:flex-col md:gap-4 md:rounded-2xl md:p-3"
+        className="inline-flex flex-row gap-2 rounded-xl bg-card/90 border border-border p-2 shadow-xl backdrop-blur-md md:flex-col md:gap-4 md:rounded-2xl md:p-3"
       >
         {icons.map((item, i) => (
           <IconItem
@@ -136,7 +169,7 @@ function IconItem({
     <motion.div
       ref={ref}
       style={{ width, height: width }}
-      className="flex aspect-square items-center justify-center rounded-xl bg-zinc-800 text-zinc-400 hover:bg-zinc-700 hover:text-white active:bg-zinc-700 transition-colors"
+      className="flex aspect-square items-center justify-center rounded-xl bg-muted text-muted-foreground hover:bg-accent hover:text-foreground active:bg-accent transition-colors"
     >
       <Icon className="w-1/2 h-1/2 pointer-events-none" />
     </motion.div>
