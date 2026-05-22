@@ -66,13 +66,11 @@ export default function VerticalDock() {
 
     const handleScroll = () => {
       const currentY = window.scrollY;
-      const docHeight = document.documentElement.scrollHeight;
-      const viewportHeight = window.innerHeight;
-      const atBottom = currentY + viewportHeight >= docHeight - 8;
+      const deltaY = currentY - lastScrollY.current;
 
-      if (lastScrollY.current - currentY <= -20) {
+      if (deltaY > 15) {
         setShowDock(false);
-      } else if (lastScrollY.current - currentY >= 20) {
+      } else if (deltaY < -15) {
         setShowDock(true);
       }
 
