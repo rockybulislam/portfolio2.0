@@ -3,8 +3,8 @@ import { motion } from "motion/react";
 import { Card } from "@/components/ui/card";
 
 const stats = [
-  { label: "Projects Completed", value: "120+" },
-  { label: "Experience", value: "10yrs" },
+  { label: "Projects Completed", value: "10+" },
+  { label: "Experience", value: "1 yrs" },
 ];
 
 export function Hero() {
@@ -36,8 +36,9 @@ export function Hero() {
           className="md:col-span-7 order-1 md:order-2 flex flex-col gap-6"
         >
           <h1 className="text-4xl md:text-6xl font-extrabold tracking-tight leading-tight">
-            The Creator: Designing the{" "}
-            <span className="text-primary">Digital Frontier.</span>
+            The Creator: <span className="text-primary">Designing the</span>
+            <br></br>
+            <span>Digital Frontier.</span>
           </h1>
           <p className="text-muted-foreground text-lg leading-relaxed max-w-2xl">
             I specialize in building bridges between complex technical

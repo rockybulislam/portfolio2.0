@@ -9,6 +9,8 @@ import {
   ShoppingBag,
   Settings,
   Terminal,
+  Boxes,
+  Phone,
 } from "lucide-react";
 import { useTheme } from "next-themes";
 
@@ -55,8 +57,8 @@ export const ThemeToggle = () => {
 export default function Navbar() {
   const navItems = [
     { name: "Home", href: "/", icon: Home },
-    { name: "Products", href: "/products", icon: ShoppingBag },
-    { name: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
+    { name: "Projects", href: "/products", icon: Boxes },
+    { name: "Contact", href: "/dashboard", icon: Phone },
     { name: "Settings", href: "/settings", icon: Settings },
   ];
 
